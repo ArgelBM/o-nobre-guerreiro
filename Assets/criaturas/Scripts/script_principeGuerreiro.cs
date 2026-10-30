@@ -7,6 +7,9 @@ public class script_principeGuerreiro : MonoBehaviour
     [SerializeField] private float forcaPulo = 10f;
 
     private static readonly int CorrendoHash = Animator.StringToHash("Correndo");
+    private static readonly int AtacarHash = Animator.StringToHash("Atacar");
+    private static readonly int EstaNoChaoHash = Animator.StringToHash("EstaNoChao");
+    private static readonly int VelocidadeYHash = Animator.StringToHash("VelocidadeY");
 
     private Rigidbody2D corpo;
     private Animator animator;
@@ -43,18 +46,25 @@ public class script_principeGuerreiro : MonoBehaviour
         if (animator.runtimeAnimatorController != null)
         {
             animator.SetBool(CorrendoHash, estaNoChao && movimentoHorizontal != 0f);
+            animator.SetBool(EstaNoChaoHash, estaNoChao);
+            animator.SetFloat(VelocidadeYHash, corpo.linearVelocity.y);
+
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                animator.SetTrigger(AtacarHash);
+            }
         }
 
         if (Input.GetButtonDown("Jump") && estaNoChao)
         {
-            corpo.velocity = new Vector2(corpo.velocity.x, forcaPulo);
+            corpo.linearVelocity = new Vector2(corpo.linearVelocity.x, forcaPulo);
             estaNoChao = false;
         }
     }
 
     private void FixedUpdate()
     {
-        corpo.velocity = new Vector2(movimentoHorizontal * velocidade, corpo.velocity.y);
+        corpo.linearVelocity = new Vector2(movimentoHorizontal * velocidade, corpo.linearVelocity.y);
         estaNoChao = false;
     }
 
